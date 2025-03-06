@@ -22,6 +22,7 @@ Front-end 프로젝트
 - React.js
 - TypeScript
 - React Router 
+- React Cookie
 - Zustand
 - Axios
 - Chart.js
