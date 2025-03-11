@@ -65,18 +65,25 @@ export default function SignUp(props: Props) {
   const daumPostCompleteHandler = (data: Address) => {
     const { address } = data;
     setUserAddress(address);
+    setUserAddressMessage('');
   };
 
   // event handler: 사용자 이름 변경 이벤트 처리 //
   const onUserNameChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setUserName(value);
+
+    setUserNameMessage('');
   };
 
   // event handler: 사용자 아이디 변경 이벤트 처리 //
   const onUserIdChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setUserId(value);
+
+    setUserIdChecked(false);
+    setUserIdMessage('');
+    setUserIdMessageError(false);
   };
 
   // event handler: 사용자 비밀번호 변경 이벤트 처리 //
@@ -88,6 +95,7 @@ export default function SignUp(props: Props) {
     const isMatch = regexp.test(value);
     const message = isMatch ? '' : '영문, 숫자를 혼용하여 8 ~ 13자 입력해주세요';
     setUserPasswordMessage(message);
+    setUserPasswordChecked(isMatch);
   };
 
   // event handler: 사용자 비밀번호 확인 변경 이벤트 처리 //
@@ -112,6 +120,14 @@ export default function SignUp(props: Props) {
   const onCheckUserIdClickHandler = () => {
     if (!isUserIdCheckButtonActive) return;
     alert('중복확인 버튼클릭!');
+
+    const idList = ['qwer1234','rewq4321','poiu0987'];
+    const isExist = idList.includes(userId);
+    
+    const message = isExist ? '이미 사용중인 아이디입니다.' : '사용 가능한 아이디입니다.';
+    setUserIdMessage(message);
+    setUserIdMessageError(isExist);
+    setUserIdChecked(!isExist);
   };
 
   // event handler: 주소 검색 버튼 클릭 이벤트 처리 //
@@ -119,11 +135,26 @@ export default function SignUp(props: Props) {
     open({ onComplete: daumPostCompleteHandler });
   };
 
+  // event handler: 회원가입 버튼 클릭 이벤트 처리 //
+  const onSignUPClickHandler = () => {
+    if (!userName) setUserNameMessage('이름을 입력해주세요.');
+    if (!userPassword) setUserPasswordMessage ('비밀번호를 입력해주세요.');
+    if (!userAddress) setUserAddressMessage ('주소를 입력해주세요.');
+    if (!isUserIdChecked) {
+      setUserIdMessage('아이디 중복 확인해주세요.');
+      setUserIdMessageError(true);
+    }
+    if (!signUpButtonActive) return;
+
+    alert('회원가입!');
+  };
+
   // effect: 사용자 비밀번호 또는 사용자 비밀번호 확인이 변경될시 실행할 함수 //
   useEffect(() => {
     const isMatch = userPasswordCheck === userPassword;
     const message = isMatch ? '' : '비밀번호가 일치하지 않습니다';
     setUserPasswordCheckMessage(message);
+    setUserPasswordEqual(isMatch);
   }, [userPassword, userPasswordCheck]);
 
   // render: 회원가입 컴포넌트 렌더링 //
@@ -140,21 +171,27 @@ export default function SignUp(props: Props) {
       <div className='divider'></div>
       <div className='input-container'>
 
-        <InputBox label={'이름'} type={'text'} value={userName} placeholder={'이름을 입력해주세요.'} onChange={onUserNameChangeHandler} message={userNameMessage} isErrorMessage />
+        <InputBox label={'이름'} type={'text'} value={userName} placeholder={'이름을 입력해주세요.'} onChange={onUserNameChangeHandler} 
+        message={userNameMessage} isErrorMessage />
 
-        <InputBox label={'아이디'} type={'text'} value={userId} placeholder={'아이디를 입력해주세요.'} onChange={onUserIdChangeHandler} message={userIdMessage} buttonName={'중복 확인'} onButtonClick={onCheckUserIdClickHandler} isErrorMessage={userIdMessageError} isButtonActive={isUserIdCheckButtonActive} />
+        <InputBox label={'아이디'} type={'text'} value={userId} placeholder={'아이디를 입력해주세요.'} onChange={onUserIdChangeHandler} 
+        message={userIdMessage} buttonName={'중복 확인'} onButtonClick={onCheckUserIdClickHandler} isErrorMessage={userIdMessageError} isButtonActive={isUserIdCheckButtonActive} />
 
-        <InputBox label={'비밀번호'} type={'password'} value={userPassword} placeholder={'비밀번호를 입력해주세요.'} onChange={onUserPasswordChangeHandler} message={userPasswordMessage} isErrorMessage />
+        <InputBox label={'비밀번호'} type={'password'} value={userPassword} placeholder={'비밀번호를 입력해주세요.'} onChange={onUserPasswordChangeHandler} 
+        message={userPasswordMessage} isErrorMessage />
 
-        <InputBox label={'비밀번호 확인'} type={'password'} value={userPasswordCheck} placeholder={'비밀번호를 입력해주세요.'} onChange={onUserPasswordCheckChangeHandler} message={userPasswordCheckMessage} isErrorMessage />
+        <InputBox label={'비밀번호 확인'} type={'password'} value={userPasswordCheck} placeholder={'비밀번호를 입력해주세요.'} onChange={onUserPasswordCheckChangeHandler} 
+        message={userPasswordCheckMessage} isErrorMessage />
 
-        <InputBox label={'주소'} type={'text'} value={userAddress} placeholder={'주소를 입력해주세요.'} onChange={onUserAddressChangeHandler} message={userAddressMessage} buttonName={'주소 검색'} onButtonClick={onSearchAddressClickHandler} isErrorMessage isButtonActive readOnly />
+        <InputBox label={'주소'} type={'text'} value={userAddress} placeholder={'주소를 입력해주세요.'} onChange={onUserAddressChangeHandler} 
+        message={userAddressMessage} buttonName={'주소 검색'} onButtonClick={onSearchAddressClickHandler} isErrorMessage isButtonActive readOnly />
 
-        <InputBox label={'상세 주소'} type={'text'} value={userDetailAddress} placeholder={'상세 주소를 입력해주세요.'} onChange={onUserDetailAddressChangeHandler} message={''} />
+        <InputBox label={'상세 주소'} type={'text'} value={userDetailAddress} placeholder={'상세 주소를 입력해주세요.'} onChange={onUserDetailAddressChangeHandler} 
+        message={''} />
 
       </div>
       <div className='button-container'>
-        <div className={signUpButtonClass}>회원가입</div>
+        <div className={signUpButtonClass} onClick={onSignUPClickHandler}>회원가입</div>
         <div className='link' onClick={() => onPageChange('sign-in')}>로그인</div>
       </div>
     </div>
