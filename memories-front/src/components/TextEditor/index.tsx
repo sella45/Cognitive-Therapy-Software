@@ -6,7 +6,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import { Editor, EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 
-import './style.scss';
+import './style.css';
 
 // interface: Text Editor Menu Bar 컴포넌트 속성 //
 interface MenuBarProp {
