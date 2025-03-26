@@ -1,3 +1,4 @@
+
 package com.LYS.memories_back.controller;
 
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +17,7 @@ import com.LYS.memories_back.common.dto.request.diary.PatchDiaryRequestDto;
 import com.LYS.memories_back.common.dto.request.diary.PostDiaryRequestDto;
 import com.LYS.memories_back.common.dto.response.ResponseDto;
 import com.LYS.memories_back.common.dto.response.diary.GetDiaryResponseDto;
+import com.LYS.memories_back.common.dto.response.diary.GetEmpathyResponseDto;
 import com.LYS.memories_back.common.dto.response.diary.GetMyDiaryResponseDto;
 import com.LYS.memories_back.service.DiarySerivce;
 
@@ -69,6 +72,23 @@ public class DiaryController {
     @AuthenticationPrincipal String userId
   ) {
     ResponseEntity<ResponseDto> response = diarySerivce.deleteDiary(diaryNumber, userId);
+    return response;
+  }
+
+  @GetMapping("/{diaryNumber}/empathy")
+  public ResponseEntity<? super GetEmpathyResponseDto> getEmpathy(
+    @PathVariable("diaryNumber") Integer diaryNumber
+  ) {
+    ResponseEntity<? super GetEmpathyResponseDto> response = diarySerivce.getEmpathy(diaryNumber);
+    return response;
+  }
+
+  @PutMapping("/{diaryNumber}/empathy")
+  public ResponseEntity<ResponseDto> putEmpathy(
+    @PathVariable("diaryNumber") Integer diaryNumber,
+    @AuthenticationPrincipal String userId
+  ) {
+    ResponseEntity<ResponseDto> response = diarySerivce.putEmpathy(diaryNumber, userId);
     return response;
   }
 
