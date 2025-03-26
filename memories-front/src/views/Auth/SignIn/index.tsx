@@ -82,6 +82,11 @@ export default function SignIn(props: Props) {
     signInRequest(requestBody).then(signInResponse);
   };
 
+  // event handler: 로그인 enter키로 누르기 이벤트 처리 //
+  const onKeyDownHandler = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter') onLoginButtonClick();
+  };
+
   // event handler: sns 로그인 버튼 클릭 이벤트 처리 //
   const onSnsButtonClickHandler = (sns: 'kakao' | 'naver') => {
     window.location.href = SNS_SIGN_IN_URL(sns);
@@ -95,14 +100,30 @@ export default function SignIn(props: Props) {
 
   // render: 로그인 컴포넌트 렌더링 //
   return (
-    <div id='auth-login-container'>
+    <div id='auth-login-container' onKeyDown={onKeyDownHandler}>  {/* ✅ Enter 키 이벤트 핸들러 추가됨 */}
       <div className='header'>Memories</div>
       <div className='input-container'>
-
-        <InputBox type={'text'} label={'아이디'} value={userId} placeholder={'아이디를 입력해주세요.'} message={userIdMessage} isErrorMessage onChange={onUserIdChangeHandler} />
-
-        <InputBox type={'password'} label={'비밀번호'} value={userPassword} placeholder={'비밀번호를 입력해주세요.'} message={userPasswordMessage} isErrorMessage onChange={onUserPasswordChangeHandler} />
-
+  
+        <InputBox
+          type={'text'}
+          label={'아이디'}
+          value={userId}
+          placeholder={'아이디를 입력해주세요.'}
+          message={userIdMessage}
+          isErrorMessage
+          onChange={onUserIdChangeHandler}
+        />
+  
+        <InputBox
+          type={'password'}
+          label={'비밀번호'}
+          value={userPassword}
+          placeholder={'비밀번호를 입력해주세요.'}
+          message={userPasswordMessage}
+          isErrorMessage
+          onChange={onUserPasswordChangeHandler}
+        />
+  
       </div>
       <div className='button-container'>
         <div className='button primary fullwidth' onClick={onLoginButtonClick}>로그인</div>
